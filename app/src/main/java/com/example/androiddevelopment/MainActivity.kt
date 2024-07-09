@@ -66,6 +66,20 @@ class MainActivity : AppCompatActivity() {
         startActivity(intent)
     }
 
+    fun sendMultipleDataUSingBundles(view: View) {
+        // SendingActivity.kt
+        val intent = Intent(this, FirstActivity::class.java)
+        val bundle = Bundle()
+
+        bundle.putString("name", "Madhuri")
+        bundle.putInt("age", 24)
+        bundle.putString("gender", "female")
+
+        intent.putExtras(bundle)
+        startActivity(intent)
+
+    }
+
 
 }
 

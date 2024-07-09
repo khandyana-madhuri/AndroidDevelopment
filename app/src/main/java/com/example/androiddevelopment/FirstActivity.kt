@@ -30,7 +30,11 @@ class FirstActivity : AppCompatActivity() {
         textView.text = data.name*/
 
         // passDataBetweenActivitiesUsingParcelizeAndParcelable
-        val data = intent.getParcelableExtra<User>("person")
-        textView.text = data?.name
+        /*val data = intent.getParcelableExtra<User>("person")
+        textView.text = data?.name*/
+
+        // sendMultipleDataUSingBundles
+        val data = intent.extras
+        textView.text = data?.getString("name") + data?.getInt("age") + data?.getString("gender")
     }
 }
