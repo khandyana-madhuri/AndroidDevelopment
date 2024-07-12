@@ -1,3 +1,6 @@
 package com.example.androiddevelopment
 
-data class Foof()
+data class Food(
+    val foodImage: Int,
+    val foodName: String
+)
