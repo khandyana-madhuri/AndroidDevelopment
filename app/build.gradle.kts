@@ -2,6 +2,8 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
     id("kotlin-kapt")
+    id ("kotlin-parcelize")
+    id ("androidx.navigation.safeargs")
 }
 
 android {
@@ -34,6 +36,9 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
+    buildFeatures {
+        dataBinding = true
+    }
 }
 
 dependencies {
@@ -49,4 +54,20 @@ dependencies {
 
     implementation(libs.parceler.api)
     kapt(libs.parceler.api)
+
+    // ROOM
+    implementation (libs.androidx.room.runtime)
+    kapt(libs.androidx.room.compiler)
+    // Coroutines
+    implementation(libs.kotlinx.coroutines.android)
+    implementation (libs.androidx.room.ktx)
+    // Navigation
+    implementation(libs.androidx.navigation.fragment.ktx)
+    implementation(libs.androidx.navigation.ui.ktx)
+    // ViewModel
+    implementation(libs.androidx.lifecycle.viewmodel.ktx)
+    // LiveData
+    implementation(libs.androidx.lifecycle.livedata.ktx)
+    // Annotation processor
+    kapt(libs.androidx.lifecycle.compiler)
 }
