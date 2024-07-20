@@ -34,12 +34,20 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <ImageView
+        <TextView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/emptyNotesImage"
             android:visibility="gone"
-            android:src="@drawable/emptybkg"/>
+            android:gravity="center"
+            android:text="You don't have any notes. click add to add notes."/>
+
+        <!--<ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/emptyNotesImage"
+            android:visibility="gone"
+            android:src="@drawable/emptybkg"/>-->
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
