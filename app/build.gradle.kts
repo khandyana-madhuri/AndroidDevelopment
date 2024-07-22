@@ -68,6 +68,8 @@ dependencies {
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
     // LiveData
     implementation(libs.androidx.lifecycle.livedata.ktx)
+    // splash screen
+    implementation(libs.androidx.core.splashscreen)
     // Annotation processor
     kapt(libs.androidx.lifecycle.compiler)
 }
