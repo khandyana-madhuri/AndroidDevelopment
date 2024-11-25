@@ -26,3 +26,29 @@ LifeCycle of Services :
 2. Bounded Service :
 - A service is termed as bounded when an application component binds itself with a service by calling bindService()
 - To stop the execution of this service, all the components must unbind themselves from the service using unbindService()
+
+
+The implemented services example is an unbounded service.
+
+onStartCommand() : This method is called when the service is started using startService(). It receives an Intent, flags, and a unique identifier for the start request.
+
+Inside onStartCommand:
+
+MediaPlayer.create(): Initializes the MediaPlayer with an audio resource from the raw directory (in this case, music.mp3).
+player.start(): Starts playing the audio.
+
+return START_STICKY
+
+This return value indicates that if the system kills the service, it should be recreated with a null intent. It allows the service to continue running until explicitly stopped.
+
+onDestroy Method
+
+This method is called when the service is destroyed (e.g., when stopService() is called).
+player.stop(): Stops playback of the audio.
+player.release(): Releases resources associated with the MediaPlayer, preventing memory leaks.
+
+onBind Method
+
+This method is called if another component binds to the service (using bindService()).
+Returning null indicates that this is not a bound service; it does not provide any binding functionality.
+
