@@ -49,4 +49,8 @@ dependencies {
 
     implementation(libs.parceler.api)
     kapt(libs.parceler.api)
+    implementation(libs.timber)
+    implementation(libs.retrofit)
+    implementation(libs.converter.gson)
+    implementation(libs.koin.android)
 }
