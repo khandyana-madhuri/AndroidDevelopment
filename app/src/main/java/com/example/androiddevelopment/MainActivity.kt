@@ -2,8 +2,9 @@ package com.example.androiddevelopment
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.databinding.DataBindingUtil
+import com.example.androiddevelopment.databinding.ActivityMainBinding
 import com.example.androiddevelopment.presentation.MainViewModel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -13,27 +14,21 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainActivity : AppCompatActivity() {
     private val mainViewModel: MainViewModel by viewModel()
-    private lateinit var userId: TextView
-    private lateinit var userTitle: TextView
-    private lateinit var userBody: TextView
+    private lateinit var mainActivityBinding: ActivityMainBinding
 
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
 
-
-        userId = findViewById(R.id.userId)
-        userTitle = findViewById(R.id.userTitle)
-        userBody = findViewById(R.id.userBody)
-
+        mainActivityBinding = DataBindingUtil.setContentView(this, R.layout.activity_main)
+        mainActivityBinding.viewModel = mainViewModel
 
         CoroutineScope(Dispatchers.Main).launch {
             val user = mainViewModel.fetchUser()
             user?.let {
-                userId.text = it.id.toString()
-                userTitle.text = it.username
-                userBody.text = it.email
+                mainViewModel.userId.set(it.id.toString())
+                mainViewModel.username.set(it.username)
+                mainViewModel.email.set(it.email)
             }
         }
 
