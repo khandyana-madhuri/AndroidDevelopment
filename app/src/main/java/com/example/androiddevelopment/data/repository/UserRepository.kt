@@ -7,15 +7,9 @@ import kotlinx.coroutines.withContext
 import timber.log.Timber
 
 class Repository(private val apiService: ApiService) {
-    suspend fun getUser() : User? {
-        return withContext(Dispatchers.IO){
-            try{
-                apiService.getUser()
-            }
-            catch(e: Exception){
-                Timber.d("Error while fetching users")
-                null
-            }
+    suspend fun getUser(): List<User> {
+        return withContext(Dispatchers.IO) {
+            apiService.getUser()
         }
     }
 }
