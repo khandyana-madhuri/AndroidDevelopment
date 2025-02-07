@@ -25,7 +25,6 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         mainActivityBinding = DataBindingUtil.setContentView(this, R.layout.activity_main)
-        mainActivityBinding.viewModel = mainViewModel
 
         CoroutineScope(Dispatchers.Main).launch {
             val users = mainViewModel.fetchUser()

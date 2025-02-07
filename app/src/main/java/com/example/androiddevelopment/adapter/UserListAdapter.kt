@@ -2,15 +2,17 @@ package com.example.androiddevelopment.adapter
 
 import android.annotation.SuppressLint
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.example.androiddevelopment.R
 import com.example.androiddevelopment.data.model.User
-import com.example.androiddevelopment.databinding.UserItemBinding
 
 
 
 class UserListAdapter: RecyclerView.Adapter<UserListAdapter.UserViewHolder>() {
-    var userList: List<User> = emptyList()
+    private var userList: List<User> = emptyList()
 
     fun setUsers(users: List<User>) {
         userList = users
@@ -20,23 +22,28 @@ class UserListAdapter: RecyclerView.Adapter<UserListAdapter.UserViewHolder>() {
         parent: ViewGroup,
         viewType: Int
     ): UserViewHolder {
-        val layout = LayoutInflater.from(parent.context)
-        val binding = UserItemBinding.inflate(layout, parent, false)
-        return UserViewHolder(binding)
+        val layout = LayoutInflater.from(parent.context).inflate(R.layout.user_item, parent, false)
+        return UserViewHolder(layout)
     }
 
     @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: UserViewHolder, position: Int) {
         val user = userList[position]
-        holder.binding.userId.text = user.id.toString()
-        holder.binding.userTitle.text = user.username
-        holder.binding.userBody.text = user.email
+        holder.apply {
+            userID.text = user.id.toString()
+            username.text = user.username
+            email.text = user.email
+        }
     }
 
     override fun getItemCount(): Int {
         return userList.size
     }
 
-    inner class UserViewHolder(val binding: UserItemBinding): RecyclerView.ViewHolder(binding.root)
+    inner class UserViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
+        val userID: TextView = itemView.findViewById(R.id.userId)
+        val username: TextView = itemView.findViewById(R.id.userTitle)
+        val email: TextView = itemView.findViewById(R.id.userBody)
+    }
 
 }
