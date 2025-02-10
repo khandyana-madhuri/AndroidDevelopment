@@ -1,0 +1,51 @@
+package com.example.androiddevelopment.domain.utils
+
+val famousCountriesMap = mapOf(
+    "US" to "United States",
+    "CN" to "China",
+    "IN" to "India",
+    "GB" to "United Kingdom",
+    "FR" to "France",
+    "DE" to "Germany",
+    "JP" to "Japan",
+    "IT" to "Italy",
+    "BR" to "Brazil",
+    "AU" to "Australia",
+    "RU" to "Russia",
+    "CA" to "Canada",
+    "ZA" to "South Africa",
+    "MX" to "Mexico",
+    "ES" to "Spain"
+)
+
+val indiaStatesMap = mapOf(
+    "AP" to "Andhra Pradesh",
+    "AR" to "Arunachal Pradesh",
+    "AS" to "Assam",
+    "BR" to "Bihar",
+    "CG" to "Chhattisgarh",
+    "DL" to "Delhi",
+    "GA" to "Goa",
+    "GJ" to "Gujarat",
+    "HR" to "Haryana",
+    "HP" to "Himachal Pradesh",
+    "JK" to "Jammu & Kashmir",
+    "JH" to "Jharkhand",
+    "KA" to "Karnataka",
+    "KL" to "Kerala",
+    "MP" to "Madhya Pradesh",
+    "MH" to "Maharashtra",
+    "MN" to "Manipur",
+    "ML" to "Meghalaya",
+    "MZ" to "Mizoram",
+    "NL" to "Nagaland",
+    "OD" to "Odisha",
+    "PB" to "Punjab",
+    "RJ" to "Rajasthan",
+    "SK" to "Sikkim",
+    "TN" to "Tamil Nadu",
+    "TS" to "Telangana",
+    "UP" to "Uttar Pradesh",
+    "UK" to "Uttarakhand",
+    "WB" to "West Bengal"
+)

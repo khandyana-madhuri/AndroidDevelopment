@@ -1,19 +1,286 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+<layout xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+<androidx.constraintlayout.widget.ConstraintLayout
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    android:background="@drawable/weather"
+    tools:context=".presentation.ui.MainActivity">
 
-    <Button
+    <TextView
+        android:id="@+id/weatherTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Click"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:text="Weather"
+        android:textSize="70sp"
+        android:fontFamily="@font/italic"
+        android:textStyle="bold|italic"
+        android:textColor="@color/dark_blue"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/cityName"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        android:padding="16dp" />
+
+        <androidx.appcompat.widget.AppCompatEditText
+            android:id="@+id/cityName"
+            android:layout_width="320dp"
+            android:singleLine="true"
+            android:layout_height="wrap_content"
+            android:imeOptions="actionDone"
+            android:padding="8dp"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            android:layout_marginTop="30dp"
+            android:background="@drawable/edit_text_border"
+            android:text="Hyderabad"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/weatherTitle"
+            app:layout_constraintBottom_toTopOf="@+id/cityCard"
+            android:layout_marginStart="20dp"
+            tools:layout_editor_absoluteY="31dp"
+            tools:ignore="MissingConstraints" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/clear"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        app:srcCompat="@drawable/clear"
+        android:tint="@color/white"
+        app:layout_constraintStart_toEndOf="@+id/cityName"
+        app:layout_constraintTop_toBottomOf="@+id/weatherTitle"
+        app:layout_constraintEnd_toStartOf="@+id/search"
+        app:layout_constraintBottom_toTopOf="@+id/cityCard"/>
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/search"
+        android:layout_width="100dp"
+        android:layout_height="45dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="30dp"
+        app:layout_constraintTop_toBottomOf="@+id/weatherTitle"
+        app:layout_constraintStart_toEndOf="@+id/clear"
+        app:srcCompat="@drawable/search_icon" />
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cityCard"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_marginTop="30dp"
+        app:layout_constraintTop_toBottomOf="@id/cityName"
+        android:elevation="8dp"
+        android:padding="8dp"
+        app:cardCornerRadius="10dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/temperatureCard"
+        android:layout_marginStart="20dp">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_marginTop="5dp"
+                    android:tint="@color/dark_blue"
+                    android:layout_marginStart="5dp"
+                    app:srcCompat="@drawable/location"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="3dp"
+                    android:textColor="@color/dark_blue"
+                    android:layout_marginTop="5dp"
+                    android:text="City"/>
+            </LinearLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="wrap_content"
+            android:layout_gravity="center"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/city"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/dark_blue"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:textSize="20sp"
+                android:text="Hyderabad"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.cardview.widget.CardView>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/temperatureCard"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_marginTop="30dp"
+        app:layout_constraintTop_toBottomOf="@id/cityName"
+        android:elevation="8dp"
+        android:padding="8dp"
+        app:cardCornerRadius="10dp"
+        app:layout_constraintStart_toEndOf="@+id/cityCard"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginStart="20dp">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:tint="@color/dark_blue"
+                android:layout_marginTop="5dp"
+                android:layout_marginStart="5dp"
+                app:srcCompat="@drawable/temperature"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="3dp"
+                android:layout_marginTop="5dp"
+                android:textColor="@color/dark_blue"
+                android:text="Temperature"/>
+        </LinearLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="wrap_content"
+            android:layout_gravity="center"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/temperature"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:textColor="@color/dark_blue"
+                android:textSize="20sp"
+                android:text="26.99c"/>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.cardview.widget.CardView>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/humidityCard"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_marginTop="30dp"
+        app:layout_constraintTop_toBottomOf="@id/cityCard"
+        android:elevation="8dp"
+        android:padding="8dp"
+        app:cardCornerRadius="10dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/descCard"
+        android:layout_marginStart="20dp">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginTop="5dp"
+                android:tint="@color/dark_blue"
+                android:layout_marginStart="5dp"
+                app:srcCompat="@drawable/humidity"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="3dp"
+                android:textColor="@color/dark_blue"
+                android:layout_marginTop="5dp"
+                android:text="Humidity"/>
+        </LinearLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="wrap_content"
+            android:layout_gravity="center"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/humidity"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/dark_blue"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:textSize="20sp"
+                android:text="89%"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.cardview.widget.CardView>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/descCard"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_marginTop="30dp"
+        app:layout_constraintTop_toBottomOf="@id/temperatureCard"
+        android:elevation="8dp"
+        android:padding="8dp"
+        app:cardCornerRadius="10dp"
+        app:layout_constraintStart_toEndOf="@+id/humidityCard"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginStart="20dp">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:tint="@color/dark_blue"
+                android:layout_marginTop="5dp"
+                android:layout_marginStart="5dp"
+                app:srcCompat="@drawable/info"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="3dp"
+                android:layout_marginTop="5dp"
+                android:textColor="@color/dark_blue"
+                android:text="Description"/>
+        </LinearLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="wrap_content"
+            android:layout_gravity="center"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/description"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:textColor="@color/dark_blue"
+                android:textSize="20sp"
+                android:text="Cloudy"/>
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/image"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                app:layout_constraintTop_toBottomOf="@+id/description"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginTop="5dp"
+                app:srcCompat="@drawable/cloudy"/>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.cardview.widget.CardView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>
