@@ -6,6 +6,7 @@ import android.content.pm.PackageManager
 import android.location.Geocoder
 import android.os.Bundle
 import android.util.Log
+import android.view.MotionEvent
 import android.view.View
 import android.widget.Toast
 import androidx.activity.ComponentActivity
@@ -114,9 +115,18 @@ class MainActivity : ComponentActivity() {
         }
     }
 
+
+    @SuppressLint("ClickableViewAccessibility")
     private fun setupListeners() {
-        binding.clear.setOnClickListener {
-            binding.cityName.text?.clear()
+        binding.cityName.setOnTouchListener { v, event ->
+            if (event.action == MotionEvent.ACTION_UP) { // The condition checks if the touch event occurred within the bounds of the drawable.
+                val drawableEnd = binding.cityName.compoundDrawables[2]
+                if (drawableEnd != null && event.rawX >= (binding.cityName.right - drawableEnd.bounds.width())) {
+                    binding.cityName.text?.clear()
+                    return@setOnTouchListener true
+                }
+            }
+            return@setOnTouchListener false
         }
 
         binding.search.setOnClickListener {
