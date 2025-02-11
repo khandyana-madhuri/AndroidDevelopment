@@ -15,7 +15,7 @@ class WeatherViewModel(private val weatherRepo: WeatherRepo) : ViewModel() {
     private var _weatherData : MutableLiveData<WeatherResponse?> = MutableLiveData(null)
     val weatherData : LiveData<WeatherResponse?> = _weatherData
 
-    fun fetchWeather(apiKey: String, city: String= "Hyderabad", context: Context) {
+    fun fetchWeather(apiKey: String, city: String, context: Context) {
         viewModelScope.launch {
             try {
                 val response = weatherRepo.getCurrentWeather(city, apiKey)
