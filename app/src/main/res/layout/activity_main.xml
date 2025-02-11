@@ -2,6 +2,12 @@
 <layout xmlns:tools="http://schemas.android.com/tools"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
+    <data>
+        <variable
+            name="viewModel"
+            type="com.example.androiddevelopment.presentation.viewmodel.WeatherViewModel" />
+        <import type="android.view.View"/>
+    </data>
 <androidx.constraintlayout.widget.ConstraintLayout
     android:id="@+id/main"
     android:layout_width="match_parent"
@@ -31,11 +37,11 @@
             android:layout_height="wrap_content"
             android:imeOptions="actionDone"
             android:padding="8dp"
-            android:textColor="@color/white"
+            android:textColor="@color/dark_blue"
             android:textSize="20sp"
             android:layout_marginTop="30dp"
             android:background="@drawable/edit_text_border"
-            android:text="Hyderabad"
+            android:text="enter city name"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/weatherTitle"
             app:layout_constraintBottom_toTopOf="@+id/cityCard"
@@ -75,7 +81,8 @@
         app:cardCornerRadius="10dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/temperatureCard"
-        android:layout_marginStart="20dp">
+        android:layout_marginStart="20dp"
+        android:visibility="@{viewModel.showUI ? View.VISIBLE : View.GONE}">
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -128,7 +135,8 @@
         app:cardCornerRadius="10dp"
         app:layout_constraintStart_toEndOf="@+id/cityCard"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginStart="20dp">
+        android:layout_marginStart="20dp"
+        android:visibility="@{viewModel.showUI ? View.VISIBLE : View.GONE}">
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -179,7 +187,8 @@
         app:cardCornerRadius="10dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/descCard"
-        android:layout_marginStart="20dp">
+        android:layout_marginStart="20dp"
+        android:visibility="@{viewModel.showUI ? View.VISIBLE : View.GONE}">
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -232,7 +241,8 @@
         app:cardCornerRadius="10dp"
         app:layout_constraintStart_toEndOf="@+id/humidityCard"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginStart="20dp">
+        android:layout_marginStart="20dp"
+        android:visibility="@{viewModel.showUI ? View.VISIBLE : View.GONE}">
 
         <LinearLayout
             android:layout_width="wrap_content"

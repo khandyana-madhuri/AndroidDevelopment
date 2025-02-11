@@ -9,6 +9,7 @@ import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.activity.ComponentActivity
+import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
@@ -38,6 +39,9 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
+        binding.viewModel = weatherViewModel
+
+        enableEdgeToEdge()
 
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
@@ -128,6 +132,7 @@ class MainActivity : ComponentActivity() {
     @SuppressLint("SetTextI18n")
     private fun updateUI(weatherData: WeatherResponse) {
         binding.apply {
+            cityName.setText(weatherData.name)
             city.text = weatherData.name
             temperature.text = weatherData.main.temp.let { "$it°C" }
             humidity.text = weatherData.main.humidity.let { "$it%" }
