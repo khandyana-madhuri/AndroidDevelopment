@@ -2,6 +2,7 @@ package com.example.androiddevelopment.presentation.ui
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.content.IntentSender
 import android.content.pm.PackageManager
 import android.location.Geocoder
 import android.os.Bundle
@@ -13,6 +14,7 @@ import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.IntentSenderRequest
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.databinding.DataBindingUtil
@@ -20,6 +22,7 @@ import com.example.androiddevelopment.R
 import com.example.androiddevelopment.data.model.WeatherResponse
 import com.example.androiddevelopment.databinding.ActivityMainBinding
 import com.example.androiddevelopment.presentation.viewmodel.WeatherViewModel
+import com.google.android.gms.common.api.ResolvableApiException
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
@@ -42,6 +45,7 @@ class MainActivity : ComponentActivity() {
     private lateinit var binding: ActivityMainBinding
     private val apiKey = "7fc99948fbb1a8dbd841623a5f0980c3"
     private lateinit var locationPermissionLauncher: ActivityResultLauncher<String>
+    private lateinit var deviceLocationSettingsLauncher: ActivityResultLauncher<IntentSenderRequest>
     private lateinit var fusedLocationClient : FusedLocationProviderClient
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -66,6 +70,17 @@ class MainActivity : ComponentActivity() {
             }
             else
                 Toast.makeText(this, "Permission Denied", Toast.LENGTH_LONG).show()
+        }
+
+        deviceLocationSettingsLauncher = registerForActivityResult(ActivityResultContracts.StartIntentSenderForResult()) { result->
+            when(result.resultCode) {
+                RESULT_OK -> fetchLocation {  loc->
+                    if(loc == null)
+                        Toast.makeText(this, "Failed to get location", Toast.LENGTH_LONG).show()
+                    else
+                        weatherViewModel.fetchWeather(apiKey, loc, applicationContext)
+                }
+            }
         }
 
 
@@ -95,40 +110,60 @@ class MainActivity : ComponentActivity() {
     // Function to fetch city name
     @SuppressLint("MissingPermission")
     fun fetchLocation(callback: (String?) -> Unit) {
-        val locationRequest = LocationRequest.Builder(Priority.PRIORITY_BALANCED_POWER_ACCURACY, 2000)
-                .setMinUpdateIntervalMillis(1000)
-                .setWaitForAccurateLocation(false)
-                .build()
+        if (ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            ) == PackageManager.PERMISSION_GRANTED
+        ) {
+            val locationRequest =
+                LocationRequest.Builder(Priority.PRIORITY_BALANCED_POWER_ACCURACY, 2000)
+                    .setMinUpdateIntervalMillis(1000)
+                    .setWaitForAccurateLocation(false)
+                    .build()
 
-        val builder = LocationSettingsRequest.Builder().addLocationRequest(locationRequest)
-        val client: SettingsClient = LocationServices.getSettingsClient(this)
-        val task: Task<LocationSettingsResponse> = client.checkLocationSettings(builder.build())
+            val builder = LocationSettingsRequest.Builder().addLocationRequest(locationRequest)
+            val client: SettingsClient = LocationServices.getSettingsClient(this)
+            val task: Task<LocationSettingsResponse> = client.checkLocationSettings(builder.build())
 
-        task.addOnSuccessListener {
-            fusedLocationClient.lastLocation.addOnSuccessListener {  location ->
-                if(location == null) {
-                    val locationCallback = object : LocationCallback() {
-                        override fun onLocationResult(locationResult: LocationResult) {
-                            Log.d("fetchLocation", "locationCallback result ${locationResult.lastLocation}")
-                            locationResult.lastLocation?.let {
-                                callback(getCityFromLocation(it))
-                                fusedLocationClient.removeLocationUpdates(this) // Stop updates after first result
+            task.addOnSuccessListener {
+                fusedLocationClient.lastLocation.addOnSuccessListener { location ->
+                    if (location == null) {
+                        val locationCallback = object : LocationCallback() {
+                            override fun onLocationResult(locationResult: LocationResult) {
+                                Log.d(
+                                    "fetchLocation",
+                                    "locationCallback result ${locationResult.lastLocation}"
+                                )
+                                locationResult.lastLocation?.let {
+                                    callback(getCityFromLocation(it))
+                                    fusedLocationClient.removeLocationUpdates(this) // Stop updates after first result
+                                }
                             }
                         }
+                        fusedLocationClient.requestLocationUpdates(
+                            locationRequest,
+                            locationCallback,
+                            Looper.getMainLooper()
+                        ).addOnFailureListener {
+                            callback(null)
+                            Log.d("requestLocation", "failed to get location")
+                        }
+                    } else {
+                        callback(getCityFromLocation(location))
                     }
-                    fusedLocationClient.requestLocationUpdates(
-                        locationRequest,
-                        locationCallback,
-                        Looper.getMainLooper()
-                    ).addOnFailureListener {
-                        callback(null)
-                        Log.d("requestLocation","failed to get location")
-                    }
-                }
-                else {
-                    callback(getCityFromLocation(location))
-                }
 
+                }
+            }
+
+            task.addOnFailureListener { exception ->
+                if(exception is ResolvableApiException) {
+                    try {
+                        val intentSenderRequest = IntentSenderRequest.Builder(exception.resolution).build()
+                        deviceLocationSettingsLauncher.launch(intentSenderRequest)
+                    } catch (e: IntentSender.SendIntentException) {
+                        Log.d("error", "Error occurred while creating IntentSenderRequest.")
+                    }
+                }
             }
         }
     }
