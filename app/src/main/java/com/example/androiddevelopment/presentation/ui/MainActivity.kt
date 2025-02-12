@@ -59,8 +59,10 @@ class MainActivity : ComponentActivity() {
 
         locationPermissionLauncher = registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
             if(isGranted) {
+                Log.d("location", "location permission granted")
                 CoroutineScope(Dispatchers.Main).launch {
                     fetchLocation { loc->
+                        Log.d("location", "locationLauncher fetched location $loc")
                         if(loc == null)
                             Toast.makeText(this@MainActivity, "Failed to fetch location", Toast.LENGTH_LONG).show()
                         else
@@ -74,11 +76,14 @@ class MainActivity : ComponentActivity() {
 
         deviceLocationSettingsLauncher = registerForActivityResult(ActivityResultContracts.StartIntentSenderForResult()) { result->
             when(result.resultCode) {
-                RESULT_OK -> fetchLocation {  loc->
-                    if(loc == null)
-                        Toast.makeText(this, "Failed to get location", Toast.LENGTH_LONG).show()
-                    else
-                        weatherViewModel.fetchWeather(apiKey, loc, applicationContext)
+                RESULT_OK -> {
+                    Log.d("location", "Device location granted")
+                    fetchLocation {  loc->
+                        if(loc == null)
+                            Toast.makeText(this, "Failed to get location", Toast.LENGTH_LONG).show()
+                        else
+                            weatherViewModel.fetchWeather(apiKey, loc, applicationContext)
+                    }
                 }
             }
         }
@@ -86,16 +91,20 @@ class MainActivity : ComponentActivity() {
 
         if(ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // If permission is not granted, ask the permission.
+            Log.d("location", "Permission not granted")
             requestLocationPermission()
         }
         else {
             // If permission is granted, fetch the location.
+            Log.d("location", "Permission granted")
             CoroutineScope(Dispatchers.Main).launch {
                 fetchLocation { loc ->
                     if(loc == null)
                         Toast.makeText(this@MainActivity, "Failed to get the location", Toast.LENGTH_LONG).show()
-                    else
+                    else {
+                        Log.d("location", "Location fetched $loc")
                         weatherViewModel.fetchWeather(apiKey, loc, applicationContext)
+                    }
                 }
             }
         }
@@ -104,22 +113,23 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun requestLocationPermission() {
+        Log.d("location", "Requesting permission")
         locationPermissionLauncher.launch(Manifest.permission.ACCESS_COARSE_LOCATION)
     }
 
     // Function to fetch city name
     @SuppressLint("MissingPermission")
     fun fetchLocation(callback: (String?) -> Unit) {
+        Log.d("location", "fetching location")
         if (ContextCompat.checkSelfPermission(
                 this,
                 Manifest.permission.ACCESS_COARSE_LOCATION
             ) == PackageManager.PERMISSION_GRANTED
         ) {
-            val locationRequest =
-                LocationRequest.Builder(Priority.PRIORITY_BALANCED_POWER_ACCURACY, 2000)
-                    .setMinUpdateIntervalMillis(1000)
-                    .setWaitForAccurateLocation(false)
-                    .build()
+            val locationRequest = LocationRequest.Builder(Priority.PRIORITY_BALANCED_POWER_ACCURACY, 2000)
+                .setMinUpdateIntervalMillis(1000)
+                .setWaitForAccurateLocation(false)
+                .build()
 
             val builder = LocationSettingsRequest.Builder().addLocationRequest(locationRequest)
             val client: SettingsClient = LocationServices.getSettingsClient(this)
@@ -127,14 +137,13 @@ class MainActivity : ComponentActivity() {
 
             task.addOnSuccessListener {
                 fusedLocationClient.lastLocation.addOnSuccessListener { location ->
+                    Log.d("location", "fusedLocation lastLocation $location")
                     if (location == null) {
+                        Log.d("location", "fusedLocation lastLocation null")
                         val locationCallback = object : LocationCallback() {
                             override fun onLocationResult(locationResult: LocationResult) {
-                                Log.d(
-                                    "fetchLocation",
-                                    "locationCallback result ${locationResult.lastLocation}"
-                                )
                                 locationResult.lastLocation?.let {
+                                    Log.d("location", "locationCallBack result $it")
                                     callback(getCityFromLocation(it))
                                     fusedLocationClient.removeLocationUpdates(this) // Stop updates after first result
                                 }
@@ -146,7 +155,7 @@ class MainActivity : ComponentActivity() {
                             Looper.getMainLooper()
                         ).addOnFailureListener {
                             callback(null)
-                            Log.d("requestLocation", "failed to get location")
+                            Log.d("location", "failed to get location")
                         }
                     } else {
                         callback(getCityFromLocation(location))
@@ -161,7 +170,7 @@ class MainActivity : ComponentActivity() {
                         val intentSenderRequest = IntentSenderRequest.Builder(exception.resolution).build()
                         deviceLocationSettingsLauncher.launch(intentSenderRequest)
                     } catch (e: IntentSender.SendIntentException) {
-                        Log.d("error", "Error occurred while creating IntentSenderRequest.")
+                        Log.d("location", "Error occurred while creating IntentSenderRequest.")
                     }
                 }
             }
@@ -176,6 +185,7 @@ class MainActivity : ComponentActivity() {
                 val address = addresses[0]
                 // Try getting the locality, with fallbacks to other fields
                 val cityName = address.locality ?: address.subAdminArea ?: address.adminArea
+                Log.d("location", "getting cityName $cityName")
                 cityName
             } else {
                 Log.d("MainActivity", "Failed to get address from Geocoder.")

@@ -32,7 +32,7 @@
 
         <androidx.appcompat.widget.AppCompatEditText
             android:id="@+id/cityName"
-            android:layout_width="320dp"
+            android:layout_width="0dp"
             android:singleLine="true"
             android:layout_height="wrap_content"
             android:imeOptions="actionDone"
@@ -45,6 +45,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/weatherTitle"
             app:layout_constraintBottom_toTopOf="@+id/cityCard"
+            app:layout_constraintEnd_toStartOf="@+id/search"
             android:layout_marginStart="20dp"
             tools:layout_editor_absoluteY="31dp"
             android:drawableEnd="@drawable/clear"
