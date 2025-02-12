@@ -5,6 +5,7 @@ import android.annotation.SuppressLint
 import android.content.pm.PackageManager
 import android.location.Geocoder
 import android.os.Bundle
+import android.os.Looper
 import android.util.Log
 import android.view.MotionEvent
 import android.view.View
@@ -20,11 +21,18 @@ import com.example.androiddevelopment.data.model.WeatherResponse
 import com.example.androiddevelopment.databinding.ActivityMainBinding
 import com.example.androiddevelopment.presentation.viewmodel.WeatherViewModel
 import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationCallback
+import com.google.android.gms.location.LocationRequest
+import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
+import com.google.android.gms.location.LocationSettingsRequest
+import com.google.android.gms.location.LocationSettingsResponse
+import com.google.android.gms.location.Priority
+import com.google.android.gms.location.SettingsClient
+import com.google.android.gms.tasks.Task
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.tasks.await
 import org.koin.android.ext.android.inject
 import java.util.Locale
 
@@ -35,7 +43,6 @@ class MainActivity : ComponentActivity() {
     private val apiKey = "7fc99948fbb1a8dbd841623a5f0980c3"
     private lateinit var locationPermissionLauncher: ActivityResultLauncher<String>
     private lateinit var fusedLocationClient : FusedLocationProviderClient
-    private lateinit var city: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,9 +56,12 @@ class MainActivity : ComponentActivity() {
         locationPermissionLauncher = registerForActivityResult(ActivityResultContracts.RequestPermission()) { isGranted ->
             if(isGranted) {
                 CoroutineScope(Dispatchers.Main).launch {
-                    city = fetchLocation().toString()
-                    weatherViewModel.fetchWeather(apiKey, city, applicationContext)
-                    Log.d("MainActivity CityName", city)
+                    fetchLocation { loc->
+                        if(loc == null)
+                            Toast.makeText(this@MainActivity, "Failed to fetch location", Toast.LENGTH_LONG).show()
+                        else
+                            weatherViewModel.fetchWeather(apiKey, loc, applicationContext)
+                    }
                 }
             }
             else
@@ -66,9 +76,12 @@ class MainActivity : ComponentActivity() {
         else {
             // If permission is granted, fetch the location.
             CoroutineScope(Dispatchers.Main).launch {
-                city = fetchLocation().toString()
-                weatherViewModel.fetchWeather(apiKey, city, applicationContext)
-                Log.d("MainActivity CityName", city)
+                fetchLocation { loc ->
+                    if(loc == null)
+                        Toast.makeText(this@MainActivity, "Failed to get the location", Toast.LENGTH_LONG).show()
+                    else
+                        weatherViewModel.fetchWeather(apiKey, loc, applicationContext)
+                }
             }
         }
         setupObservers()
@@ -81,14 +94,46 @@ class MainActivity : ComponentActivity() {
 
     // Function to fetch city name
     @SuppressLint("MissingPermission")
-    suspend fun fetchLocation(): String? {
-        val location = fusedLocationClient.lastLocation.await()
+    fun fetchLocation(callback: (String?) -> Unit) {
+        val locationRequest = LocationRequest.Builder(Priority.PRIORITY_BALANCED_POWER_ACCURACY, 2000)
+                .setMinUpdateIntervalMillis(1000)
+                .setWaitForAccurateLocation(false)
+                .build()
 
-        if (location == null) {
-            Log.d("MainActivity", "Location is null. Consider requesting location updates.")
-            return null
+        val builder = LocationSettingsRequest.Builder().addLocationRequest(locationRequest)
+        val client: SettingsClient = LocationServices.getSettingsClient(this)
+        val task: Task<LocationSettingsResponse> = client.checkLocationSettings(builder.build())
+
+        task.addOnSuccessListener {
+            fusedLocationClient.lastLocation.addOnSuccessListener {  location ->
+                if(location == null) {
+                    val locationCallback = object : LocationCallback() {
+                        override fun onLocationResult(locationResult: LocationResult) {
+                            Log.d("fetchLocation", "locationCallback result ${locationResult.lastLocation}")
+                            locationResult.lastLocation?.let {
+                                callback(getCityFromLocation(it))
+                                fusedLocationClient.removeLocationUpdates(this) // Stop updates after first result
+                            }
+                        }
+                    }
+                    fusedLocationClient.requestLocationUpdates(
+                        locationRequest,
+                        locationCallback,
+                        Looper.getMainLooper()
+                    ).addOnFailureListener {
+                        callback(null)
+                        Log.d("requestLocation","failed to get location")
+                    }
+                }
+                else {
+                    callback(getCityFromLocation(location))
+                }
+
+            }
         }
+    }
 
+    private fun getCityFromLocation(location: android.location.Location)  : String? {
         val geocoder = Geocoder(this, Locale.getDefault())
         return try {
             val addresses = geocoder.getFromLocation(location.latitude, location.longitude, 1)
@@ -118,7 +163,7 @@ class MainActivity : ComponentActivity() {
 
     @SuppressLint("ClickableViewAccessibility")
     private fun setupListeners() {
-        binding.cityName.setOnTouchListener { v, event ->
+        binding.cityName.setOnTouchListener { _, event ->
             if (event.action == MotionEvent.ACTION_UP) { // The condition checks if the touch event occurred within the bounds of the drawable.
                 val drawableEnd = binding.cityName.compoundDrawables[2]
                 if (drawableEnd != null && event.rawX >= (binding.cityName.right - drawableEnd.bounds.width())) {
