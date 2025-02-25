@@ -9,7 +9,9 @@ import android.view.MenuItem
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayout
+import com.google.android.material.tabs.TabLayoutMediator
 
 
 class MainActivity : AppCompatActivity() {
@@ -19,35 +21,19 @@ class MainActivity : AppCompatActivity() {
 
         val toolBar = findViewById<Toolbar>(R.id.toolBar)
         val tabLayout = findViewById<TabLayout>(R.id.tabLayout)
+        val viewPager = findViewById<ViewPager2>(R.id.viewPager)
 
         setSupportActionBar(toolBar)
+        viewPager.adapter = ViewPagerAdapter(this)
 
-        supportFragmentManager.beginTransaction()
-            .replace(R.id.fragmentContainer, FirstFragment())
-            .commit()
-
-        tabLayout.addTab(tabLayout.newTab().setText("Chats"))
-        tabLayout.addTab(tabLayout.newTab().setText("Calls"))
-        tabLayout.addTab(tabLayout.newTab().setText("Status"))
-
-        tabLayout.addOnTabSelectedListener(object: TabLayout.OnTabSelectedListener {
-            override fun onTabSelected(tab: TabLayout.Tab?) {
-                val fragment = when(tab?.position) {
-                    0 -> FirstFragment()
-                    1 -> SecondFragment()
-                    2 -> ThirdFragment()
-                    else -> FirstFragment()
-                }
-
-                supportFragmentManager.beginTransaction()
-                    .replace(R.id.fragmentContainer, fragment)
-                    .commit()
+        TabLayoutMediator(tabLayout, viewPager) { tab, position ->
+            tab.text = when(position) {
+                0 -> "Chats"
+                1 -> "Calls"
+                2 -> "Status"
+                else -> "Tab"
             }
-
-            override fun onTabUnselected(tab: TabLayout.Tab?) {}
-
-            override fun onTabReselected(tab: TabLayout.Tab?) {}
-        })
+        }.attach()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?) : Boolean {
@@ -58,7 +44,7 @@ class MainActivity : AppCompatActivity() {
         for(i in 0 until (menu?.size() ?: 0)) {
             val menuItem = menu?.getItem(i)
             val spannable = SpannableString(menuItem?.title)
-            spannable.setSpan(ForegroundColorSpan(Color.WHITE), 0, spannable.length, 0)
+            spannable.setSpan(ForegroundColorSpan(Color.BLACK), 0, spannable.length, 0)
             menuItem?.title = spannable
         }
 
@@ -78,6 +64,5 @@ class MainActivity : AppCompatActivity() {
             else -> super.onOptionsItemSelected(item)
         }
     }
-
 }
 
