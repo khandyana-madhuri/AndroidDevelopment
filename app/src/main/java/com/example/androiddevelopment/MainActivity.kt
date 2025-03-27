@@ -7,9 +7,15 @@ import android.text.style.ForegroundColorSpan
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
+import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.core.view.GravityCompat
+import androidx.drawerlayout.widget.DrawerLayout
+import androidx.viewpager2.widget.ViewPager2
+import com.google.android.material.navigation.NavigationView
 import com.google.android.material.tabs.TabLayout
+import com.google.android.material.tabs.TabLayoutMediator
 
 
 class MainActivity : AppCompatActivity() {
@@ -19,35 +25,38 @@ class MainActivity : AppCompatActivity() {
 
         val toolBar = findViewById<Toolbar>(R.id.toolBar)
         val tabLayout = findViewById<TabLayout>(R.id.tabLayout)
+        val viewPager = findViewById<ViewPager2>(R.id.viewPager)
 
         setSupportActionBar(toolBar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setHomeAsUpIndicator(R.drawable.menu)
 
-        supportFragmentManager.beginTransaction()
-            .replace(R.id.fragmentContainer, FirstFragment())
-            .commit()
+        val drawerLayout = findViewById<DrawerLayout>(R.id.drawerLayout)
+        val navigationView = findViewById<NavigationView>(R.id.navigationView)
 
-        tabLayout.addTab(tabLayout.newTab().setText("Chats"))
-        tabLayout.addTab(tabLayout.newTab().setText("Calls"))
-        tabLayout.addTab(tabLayout.newTab().setText("Status"))
+        val toggle = ActionBarDrawerToggle(this, drawerLayout, R.string.open, R.string.close)
+        drawerLayout.addDrawerListener(toggle)
+        toggle.syncState()
 
-        tabLayout.addOnTabSelectedListener(object: TabLayout.OnTabSelectedListener {
-            override fun onTabSelected(tab: TabLayout.Tab?) {
-                val fragment = when(tab?.position) {
-                    0 -> FirstFragment()
-                    1 -> SecondFragment()
-                    2 -> ThirdFragment()
-                    else -> FirstFragment()
-                }
-
-                supportFragmentManager.beginTransaction()
-                    .replace(R.id.fragmentContainer, fragment)
-                    .commit()
+        navigationView.setNavigationItemSelectedListener { menuItem ->
+            when(menuItem.itemId) {
+                R.id.home -> Toast.makeText(this, "Clicked Home", Toast.LENGTH_SHORT).show()
+                R.id.logout -> Toast.makeText(this, "Clicked Logout", Toast.LENGTH_SHORT).show()
             }
+            drawerLayout.closeDrawer(GravityCompat.START)
+            true
+        }
 
-            override fun onTabUnselected(tab: TabLayout.Tab?) {}
+        viewPager.adapter = ViewPagerAdapter(this)
 
-            override fun onTabReselected(tab: TabLayout.Tab?) {}
-        })
+        TabLayoutMediator(tabLayout, viewPager) { tab, position ->
+            tab.text = when(position) {
+                0 -> "Chats"
+                1 -> "Calls"
+                2 -> "Status"
+                else -> "Tab"
+            }
+        }.attach()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?) : Boolean {
@@ -58,7 +67,7 @@ class MainActivity : AppCompatActivity() {
         for(i in 0 until (menu?.size() ?: 0)) {
             val menuItem = menu?.getItem(i)
             val spannable = SpannableString(menuItem?.title)
-            spannable.setSpan(ForegroundColorSpan(Color.WHITE), 0, spannable.length, 0)
+            spannable.setSpan(ForegroundColorSpan(Color.BLACK), 0, spannable.length, 0)
             menuItem?.title = spannable
         }
 
@@ -67,6 +76,16 @@ class MainActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem) : Boolean {
         return when(item.itemId) {
+            android.R.id.home -> {
+                // Open/Close the Drawer when the Hamburger Icon is clicked
+                val drawerLayout = findViewById<DrawerLayout>(R.id.drawerLayout)
+                if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+                    drawerLayout.closeDrawer(GravityCompat.START)
+                } else {
+                    drawerLayout.openDrawer(GravityCompat.START)
+                }
+                true
+            }
             R.id.settings -> {
                 Toast.makeText(this, "Selected Settings", Toast.LENGTH_SHORT).show()
                 true
@@ -78,6 +97,5 @@ class MainActivity : AppCompatActivity() {
             else -> super.onOptionsItemSelected(item)
         }
     }
-
 }
 
