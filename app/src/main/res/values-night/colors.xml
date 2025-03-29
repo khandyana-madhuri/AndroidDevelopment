@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--Color tool colors-->
+    <color name="white">#000000</color>
+    <color name="black">#FFFFFF</color>
+    <color name="gray">#808080</color>
+
+    <color name="light_blue">#2C3E50</color>
+
+    <!-- Sky Blue (Night Mode) -->
+    <color name="sky_blue">#34495E</color>
+
+    <!-- Dodger Blue (Night Mode) -->
+    <color name="dodger_blue">#2980B9</color>
+
+    <!-- Steel Blue (Night Mode) -->
+    <color name="steel_blue">#2C3E50</color>
+
+    <!-- Royal Blue (Night Mode) -->
+    <color name="royal_blue">#2C6A92</color>
+
+    <!-- Medium Blue (Night Mode) -->
+    <color name="medium_blue">#2C3E50</color>
+
+    <!-- Cobalt Blue (Night Mode) -->
+    <color name="cobalt_blue">#3C5A75</color>
+
+    <!-- Navy Blue (Night Mode) -->
+    <color name="navy_blue">#2C3E50</color>
+
+    <!-- Prussian Blue (Night Mode) -->
+    <color name="prussian_blue">#2C3E50</color>
+
+    <!-- Midnight Blue (Night Mode) -->
+    <color name="midnight_blue">#2C3E50</color>
+
+    <!-- Teal (Night Mode) -->
+    <color name="teal">#1C3D3D</color>
+
+    <!-- Azure (Night Mode) -->
+    <color name="azure">#1D5C8A</color>
+</resources>

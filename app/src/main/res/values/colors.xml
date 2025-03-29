@@ -1,5 +1,65 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="black">#FF000000</color>
-    <color name="white">#FFFFFFFF</color>
+
+    <!--Color tool colors-->
+    <color name="white">#FFFFFF</color>
+    <color name="gray">#808080</color>
+    <color name="black">#000000</color>
+<!--    <color name="primaryColor">#f9f9f9</color>-->
+    <color name="primaryLightColor">#ffffff</color>
+    <color name="primaryDarkColor">#c6c6c6</color>
+    <color name="secondaryColor">#a000a0</color>
+    <color name="secondaryLightColor">#d44bd2</color>
+    <color name="secondaryDarkColor">#6d0071</color>
+    <color name="primaryTextColor">#000000</color>
+    <color name="secondaryTextColor">#ffffff</color>
+
+    <color name="text_gray">#616161</color>
+    <color name="edit_contact">#777</color>
+    <color name="divider_color">#616161</color>
+    <color name="medium_bold">#404040</color>
+    <color name="sub_divider_color">#616161</color>
+
+    <color name="light_blue">#ADD8E6</color>
+
+    <!-- Sky Blue -->
+    <color name="sky_blue">#87CEEB</color>
+
+    <!-- Dodger Blue -->
+    <color name="dodger_blue">#1E90FF</color>
+
+    <!-- Steel Blue -->
+    <color name="steel_blue">#4682B4</color>
+
+    <!-- Royal Blue -->
+    <color name="royal_blue">#4169E1</color>
+
+    <!-- Medium Blue -->
+    <color name="medium_blue">#0000CD</color>
+
+    <!-- Cobalt Blue -->
+    <color name="cobalt_blue">#0047AB</color>
+
+    <!-- Navy Blue -->
+    <color name="navy_blue">#000080</color>
+
+    <!-- Prussian Blue -->
+    <color name="prussian_blue">#003153</color>
+
+    <!-- Midnight Blue -->
+    <color name="midnight_blue">#191970</color>
+
+    <!-- Teal -->
+    <color name="teal">#008080</color>
+
+    <!-- Azure -->
+    <color name="azure">#007FFF</color>
+    <color name="translink_blue">#005BA2</color>
+
+    <color name="primary_dark">#6200EE</color>
+    <color name="light_purple_50">#F3E5F5</color>
+    <color name="secondary_text">#757575</color>
+
+
+
 </resources>

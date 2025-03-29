@@ -1,3 +1,12 @@
 <resources>
-    <string name="app_name">AndroidDevelopment</string>
+    <string name="app_name">BookXpert</string>
+    <string name="info_text">Wrapped in expertise: Your accounting partner, always by your side.</string>
+    <string name="sign_in">Sign in with Google</string>
+    <string name="pdf_viewer">PDF Viewer</string>
+    <string name="img_viewer">Image Viewer</string>
+    <string name="user_data">User Data</string>
+    <string name="sub_title">YOUR ACCOUNTING PARTNER</string>
+    <string name="open_camera">Open Camera</string>
+    <string name="open_gallery">Open Gallery</string>
+    <string name="image_description">Selected image display</string>
 </resources>
