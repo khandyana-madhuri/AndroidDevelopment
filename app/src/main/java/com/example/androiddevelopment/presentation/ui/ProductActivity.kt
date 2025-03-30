@@ -34,6 +34,7 @@ class ProductActivity : AppCompatActivity() {
     private val productViewModel: ProductViewModel by inject()
     private lateinit var adapter: ProductAdapter
     private val repository: ProductRepository by inject()
+    private var shouldFetchFromApi = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,6 +46,17 @@ class ProductActivity : AppCompatActivity() {
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
+        }
+
+        if (savedInstanceState == null) {
+            shouldFetchFromApi = true
+        } else {
+            shouldFetchFromApi = savedInstanceState.getBoolean("SHOULD_FETCH", false)
+        }
+
+        if (shouldFetchFromApi) {
+            fetchProductsAndStore()
+            shouldFetchFromApi = false
         }
 
         val recyclerView = findViewById<RecyclerView>(R.id.recyclerView)
@@ -61,7 +73,6 @@ class ProductActivity : AppCompatActivity() {
         )
         recyclerView.adapter = adapter
 
-        fetchProductsAndStore()
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -76,14 +87,20 @@ class ProductActivity : AppCompatActivity() {
         }
     }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putBoolean("SHOULD_FETCH", shouldFetchFromApi)
+    }
+
     private fun fetchProductsAndStore() {
         lifecycleScope.launch {
             try {
-                val apiResponse = repository.getProducts()
-                val products = apiResponse.map { ProductEntity.fromApiResponse(it) }
-                adapter.submitList(products)
-                products.forEach {
-                    productViewModel.insertProduct(it)
+                if (productViewModel.products.value.isNullOrEmpty()) {
+                    val apiResponse = repository.getProducts()
+                    val products = apiResponse.map { ProductEntity.fromApiResponse(it) }
+                    products.forEach {
+                        productViewModel.insertProduct(it)
+                    }
                 }
             } catch (e: Exception) {
                 e.printStackTrace()

@@ -9,11 +9,12 @@ import com.example.androiddevelopment.data.ProductEntity
 import com.example.androiddevelopment.domain.repository.ProductRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class ProductViewModel(private val repository: ProductRepository) : ViewModel() {
     private val _products = MutableStateFlow<List<ProductEntity>>(emptyList())
-    val products: StateFlow<List<ProductEntity>> = _products
+    val products: StateFlow<List<ProductEntity>> = _products.asStateFlow()
 
     private val _errorMessage = MutableLiveData<String>()
     val errorMessage: LiveData<String> = _errorMessage
@@ -24,12 +25,11 @@ class ProductViewModel(private val repository: ProductRepository) : ViewModel() 
 
     private fun loadAllProducts() {
         viewModelScope.launch {
-            repository.allProducts.collect { productList ->
-                _products.value = productList
+            repository.allProducts.collect { products ->
+                _products.value = products
             }
         }
     }
-
 
     fun insertProduct(product: ProductEntity) = viewModelScope.launch {
         try {
@@ -55,5 +55,5 @@ class ProductViewModel(private val repository: ProductRepository) : ViewModel() 
         }
     }
     
-    
+
 }
