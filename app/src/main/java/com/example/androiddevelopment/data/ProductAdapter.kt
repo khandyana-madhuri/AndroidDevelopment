@@ -4,14 +4,17 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageButton
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.androiddevelopment.R
 
-class ProductAdapter(private var products: List<ProductEntity>,
-                     private val onItemClick: (ProductEntity) -> Unit) :
-    RecyclerView.Adapter<ProductAdapter.ProductViewHolder>() {
+class ProductAdapter(
+    private var products: List<ProductEntity>,
+    private val onEditClick: (ProductEntity) -> Unit,
+    private val onDeleteClick: (ProductEntity) -> Unit
+) : RecyclerView.Adapter<ProductAdapter.ProductViewHolder>() {
 
     fun submitList(newList: List<ProductEntity>) {
         products = newList
@@ -19,13 +22,21 @@ class ProductAdapter(private var products: List<ProductEntity>,
     }
 
     inner class ProductViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        init {
-            itemView.setOnClickListener {
-                onItemClick(products[adapterPosition])
-            }
-        }
         val tvName: TextView = itemView.findViewById(R.id.tvName)
         val layoutDynamicFields: LinearLayout = itemView.findViewById(R.id.layoutDynamicFields)
+        val btnEdit: ImageButton = itemView.findViewById(R.id.btnEdit)
+        val btnDelete: ImageButton = itemView.findViewById(R.id.btnDelete)
+
+        init {
+
+            btnEdit.setOnClickListener {
+                onEditClick(products[adapterPosition])
+            }
+
+            btnDelete.setOnClickListener {
+                onDeleteClick(products[adapterPosition])
+            }
+        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ProductViewHolder {
@@ -40,8 +51,8 @@ class ProductAdapter(private var products: List<ProductEntity>,
 
         holder.tvName.text = product.name
 
-        if (holder.layoutDynamicFields.childCount > 1) {
-            holder.layoutDynamicFields.removeViews(1, holder.layoutDynamicFields.childCount - 1)
+        if (holder.layoutDynamicFields.childCount > 2) {
+            holder.layoutDynamicFields.removeViews(1, holder.layoutDynamicFields.childCount - 2)
         }
 
         fun addFieldIfPresent(label: String, value: Any?) {
@@ -55,7 +66,7 @@ class ProductAdapter(private var products: List<ProductEntity>,
                         setMargins(0, 4.dpToPx(context), 0, 0)
                     }
                 }.also { textView ->
-                    holder.layoutDynamicFields.addView(textView)
+                    holder.layoutDynamicFields.addView(textView, holder.layoutDynamicFields.childCount - 1)
                 }
             }
         }
@@ -77,7 +88,6 @@ class ProductAdapter(private var products: List<ProductEntity>,
 
     private fun Int.dpToPx(context: Context): Int =
         (this * context.resources.displayMetrics.density).toInt()
-
 
     override fun getItemCount(): Int = products.size
 }

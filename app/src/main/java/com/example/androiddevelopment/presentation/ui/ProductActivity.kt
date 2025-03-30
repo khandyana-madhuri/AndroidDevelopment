@@ -51,8 +51,12 @@ class ProductActivity : AppCompatActivity() {
         recyclerView.layoutManager = LinearLayoutManager(this)
         adapter = ProductAdapter(
             products = emptyList(),
-            onItemClick = { product ->
-                showProductOptionsDialog(product)
+            onEditClick = { product ->
+                showUpdateDialog(product)
+            },
+            onDeleteClick = { product ->
+                productViewModel.deleteProduct(product)
+                showLocalNotification(product.name)
             }
         )
         recyclerView.adapter = adapter
@@ -83,25 +87,8 @@ class ProductActivity : AppCompatActivity() {
                 }
             } catch (e: Exception) {
                 e.printStackTrace()
-                // Handle error
             }
         }
-    }
-
-    private fun showProductOptionsDialog(product: ProductEntity) {
-        val options = arrayOf("Update", "Delete", "Cancel")
-        AlertDialog.Builder(this)
-            .setTitle("Product Options")
-            .setItems(options) { _, which ->
-                when (which) {
-                    0 -> showUpdateDialog(product)
-                    1 -> {
-                        productViewModel.deleteProduct(product)
-                        showLocalNotification(product.name)
-                    }
-                }
-            }
-            .show()
     }
 
 
