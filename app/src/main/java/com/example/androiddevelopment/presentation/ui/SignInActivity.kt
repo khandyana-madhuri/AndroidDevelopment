@@ -40,6 +40,10 @@ class SignInActivity : AppCompatActivity() {
             } catch(e: ApiException) {
                 Log.e("Google SignIn", "SignIn failed ${e.statusCode}")
             }
+        } else {
+            if (result.resultCode == RESULT_CANCELED) {
+                Toast.makeText(this, "Sign in canceled", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 

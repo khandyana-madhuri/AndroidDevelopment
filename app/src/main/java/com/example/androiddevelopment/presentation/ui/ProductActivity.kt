@@ -122,7 +122,7 @@ class ProductActivity : AppCompatActivity() {
     private fun fetchProductsAndStore() {
         lifecycleScope.launch {
             try {
-                if (productViewModel.products.value.isNullOrEmpty()) {
+                if (productViewModel.products.value.isEmpty()) {
                     val apiResponse = repository.getProducts()
                     val products = apiResponse.map { ProductEntity.fromApiResponse(it) }
                     products.forEach {
