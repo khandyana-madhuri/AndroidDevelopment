@@ -7,6 +7,7 @@ import android.widget.EditText
 import android.widget.LinearLayout
 import androidx.fragment.app.DialogFragment
 import com.example.androiddevelopment.data.ProductEntity
+import java.util.Locale
 import kotlin.reflect.KProperty1
 import kotlin.reflect.full.memberProperties
 
@@ -29,7 +30,11 @@ class UpdateProductDialog(
             val value = (property as KProperty1<ProductEntity, Any?>).get(product)?.toString() ?: ""
             if (property.name != "id") { // Exclude 'id' field
                 val editText = EditText(context).apply {
-                    hint = property.name.capitalize()
+                    hint = property.name.replaceFirstChar {
+                        if (it.isLowerCase()) it.titlecase(
+                            Locale.ROOT
+                        ) else it.toString()
+                    }
                     setText(value)
                 }
                 layout.addView(editText)

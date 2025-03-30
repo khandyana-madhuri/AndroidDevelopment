@@ -3,7 +3,7 @@ package com.example.androiddevelopment.presentation.viewmodel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
-class ImageViewerViewModel() : ViewModel() {
+class ImageViewerViewModel : ViewModel() {
 
     val openCamera = MutableLiveData<Boolean>()
     val openGallery = MutableLiveData<Boolean>()

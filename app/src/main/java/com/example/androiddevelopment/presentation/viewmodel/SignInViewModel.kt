@@ -15,13 +15,6 @@ class SignInViewModel(private val userRepository: UserRepository) : ViewModel() 
     val user: LiveData<UserEntity?> get() = _users
     val signIn = MutableLiveData<Boolean>()
 
-    fun getUser() {
-        viewModelScope.launch {
-            val users = userRepository.getUsers()
-            _users.postValue(users)
-        }
-    }
-
     fun handleGoogleSignInResult(user: FirebaseUser) {
         viewModelScope.launch {
             val userEntity = UserEntity(
