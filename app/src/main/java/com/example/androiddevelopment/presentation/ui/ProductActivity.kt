@@ -10,6 +10,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NotificationCompat
@@ -21,6 +22,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.androiddevelopment.R
+import com.example.androiddevelopment.data.NotificationPreferences
 import com.example.androiddevelopment.data.ProductAdapter
 import com.example.androiddevelopment.data.ProductEntity
 import com.example.androiddevelopment.databinding.ActivityProductBinding
@@ -35,6 +37,13 @@ class ProductActivity : AppCompatActivity() {
     private lateinit var adapter: ProductAdapter
     private val repository: ProductRepository by inject()
     private var shouldFetchFromApi = true
+    private lateinit var notificationPrefs: NotificationPreferences
+    private val notificationPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { isGranted ->
+        notificationPrefs.setNotificationsEnabled(isGranted)
+        binding.switchNotifications.isChecked = isGranted
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -73,6 +82,8 @@ class ProductActivity : AppCompatActivity() {
         )
         recyclerView.adapter = adapter
 
+        notificationPrefs = NotificationPreferences(this)
+        setupNotificationToggle()
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.STARTED) {
@@ -84,6 +95,22 @@ class ProductActivity : AppCompatActivity() {
 
         productViewModel.errorMessage.observe(this) { error ->
             error?.let { Toast.makeText(this, it, Toast.LENGTH_SHORT).show() }
+        }
+    }
+
+    private fun setupNotificationToggle() {
+        binding.switchNotifications.isChecked = notificationPrefs.areNotificationsEnabled()
+
+        binding.switchNotifications.setOnCheckedChangeListener { _, isChecked ->
+            if (isChecked) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    notificationPermissionLauncher.launch(android.Manifest.permission.POST_NOTIFICATIONS)
+                } else {
+                    notificationPrefs.setNotificationsEnabled(true)
+                }
+            } else {
+                notificationPrefs.setNotificationsEnabled(false)
+            }
         }
     }
 
@@ -110,12 +137,17 @@ class ProductActivity : AppCompatActivity() {
 
 
     private fun showLocalNotification(productName: String) {
+
+        if (!notificationPrefs.areNotificationsEnabled()) {
+            return // Exit if notifications are disabled
+        }
+
         val channelId = "delete_notification_channel"
         val notificationId = 1
 
         val notificationBuilder = NotificationCompat.Builder(this, channelId)
             .setSmallIcon(R.drawable.ic_notification)
-            .setContentTitle("Product Deleted")
+            .setContentTitle(getString(R.string.app_name))
             .setContentText("The product '$productName' has been deleted")
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
             .setAutoCancel(true)
