@@ -83,4 +83,7 @@ dependencies {
 
     implementation("org.jetbrains.kotlin:kotlin-reflect:1.9.0")
 
+    implementation("com.google.firebase:firebase-messaging:23.1.1") // Use the latest version
+    implementation("androidx.core:core:1.8.0") // Required for NotificationCompat
+
 }

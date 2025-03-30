@@ -1,6 +1,9 @@
 package com.example.androiddevelopment.presentation.ui
 
+import android.app.NotificationChannel
+import android.app.NotificationManager
 import android.content.Context
+import android.os.Build
 import android.os.Bundle
 import android.widget.EditText
 import android.widget.LinearLayout
@@ -9,6 +12,7 @@ import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.NotificationCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.Lifecycle
@@ -91,11 +95,37 @@ class ProductActivity : AppCompatActivity() {
             .setItems(options) { _, which ->
                 when (which) {
                     0 -> showUpdateDialog(product)
-                    1 -> productViewModel.deleteProduct(product)
+                    1 -> {
+                        productViewModel.deleteProduct(product)
+                        showLocalNotification(product.name)
+                    }
                 }
             }
             .show()
     }
+
+
+    private fun showLocalNotification(productName: String) {
+        val channelId = "delete_notification_channel"
+        val notificationId = 1
+
+        val notificationBuilder = NotificationCompat.Builder(this, channelId)
+            .setSmallIcon(R.drawable.ic_notification)
+            .setContentTitle("Product Deleted")
+            .setContentText("The product '$productName' has been deleted")
+            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+            .setAutoCancel(true)
+
+        val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val channel = NotificationChannel(channelId, "Delete Notifications", NotificationManager.IMPORTANCE_DEFAULT)
+            notificationManager.createNotificationChannel(channel)
+        }
+
+        notificationManager.notify(notificationId, notificationBuilder.build())
+    }
+
 
     private fun showUpdateDialog(product: ProductEntity) {
         val context = this
