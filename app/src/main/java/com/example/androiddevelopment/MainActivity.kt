@@ -9,6 +9,7 @@ import androidx.core.view.WindowInsetsCompat
 import com.example.androiddevelopment.databinding.ActivityMainBinding
 import com.example.androiddevelopment.presentation.ui.ImageViewerActivity
 import com.example.androiddevelopment.presentation.ui.PdfViewerActivity
+import com.example.androiddevelopment.presentation.ui.ProductActivity
 
 
 class MainActivity : AppCompatActivity() {
@@ -32,6 +33,10 @@ class MainActivity : AppCompatActivity() {
 
         binding.imgViewer.setOnClickListener {
             startActivity(Intent(this, ImageViewerActivity::class.java))
+        }
+
+        binding.userData.setOnClickListener {
+            startActivity(Intent(this, ProductActivity::class.java))
         }
     }
 }

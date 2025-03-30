@@ -77,7 +77,10 @@ dependencies {
     // Coroutines for Android
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.8.0")
 
-    implementation("com.github.bumptech.glide:glide:4.15.0")  // Check for the latest version
-    annotationProcessor("com.github.bumptech.glide:compiler:4.15.0")  // F
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation("com.squareup.okhttp3:logging-interceptor:4.10.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+
+    implementation("org.jetbrains.kotlin:kotlin-reflect:1.9.0")
 
 }
