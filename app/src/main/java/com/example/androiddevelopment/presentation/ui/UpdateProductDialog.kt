@@ -6,7 +6,7 @@ import android.os.Bundle
 import android.widget.EditText
 import android.widget.LinearLayout
 import androidx.fragment.app.DialogFragment
-import com.example.androiddevelopment.data.ProductEntity
+import com.example.androiddevelopment.data.model.ProductEntity
 import java.util.Locale
 import kotlin.reflect.KProperty1
 import kotlin.reflect.full.memberProperties

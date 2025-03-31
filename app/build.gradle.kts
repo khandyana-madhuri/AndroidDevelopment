@@ -48,42 +48,38 @@ dependencies {
     implementation(libs.material)
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
-    testImplementation(libs.junit)
-    androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.androidx.espresso.core)
 
+    // Firebase
     implementation(libs.firebase.auth)
     implementation(libs.play.services.auth)
+    implementation(libs.firebase.messaging)
 
-    implementation("androidx.room:room-runtime:2.6.1")
-    kapt("androidx.room:room-compiler:2.6.1")
-    implementation("com.google.android.gms:play-services-auth:21.1.1")
+    // Room Databse
+    implementation(libs.androidx.room.runtime)
+    kapt(libs.androidx.room.compiler)
+    implementation(libs.play.services.auth.v2130)
+    implementation(libs.androidx.room.ktx)
 
+    // Pdf Viewer
+    implementation(libs.android.pdf.viewer)
 
-    implementation("com.github.mhiew:android-pdf-viewer:3.2.0-beta.3")
-    implementation("com.squareup.okhttp3:okhttp:4.12.0")
+    // Koin
+    implementation(libs.koin.core)
+    implementation(libs.koin.android)
 
-    implementation("io.insert-koin:koin-core:3.5.3")
+    // Coroutines
+    implementation(libs.kotlinx.coroutines.core)
+    implementation(libs.kotlinx.coroutines.android)
 
-    // Koin for Android
-    implementation("io.insert-koin:koin-android:4.0.0")
-    implementation("androidx.room:room-ktx:2.6.1")
-    // Koin ViewModel support
-   // implementation("io.insert-koin:koin-androidx-viewmodel:3.5.3")
+    // Retrofit, Converter and Logging Interceptor
+    implementation(libs.okhttp)
+    implementation(libs.retrofit)
+    implementation(libs.logging.interceptor)
+    implementation(libs.converter.gson)
 
-    // Coroutines Core
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.0")
+    implementation(libs.kotlin.reflect)
 
-    // Coroutines for Android
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.8.0")
-
-    implementation("com.squareup.retrofit2:retrofit:2.9.0")
-    implementation("com.squareup.okhttp3:logging-interceptor:4.10.0")
-    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
-
-    implementation("org.jetbrains.kotlin:kotlin-reflect:1.9.0")
-
-    implementation("com.google.firebase:firebase-messaging:23.1.1") // Use the latest version
-    implementation("androidx.core:core:1.8.0") // Required for NotificationCompat
+    // Notification Compat
+    implementation(libs.androidx.core)
 
 }

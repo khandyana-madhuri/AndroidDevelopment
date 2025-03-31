@@ -1,4 +1,4 @@
-package com.example.androiddevelopment.data
+package com.example.androiddevelopment.domain.utils
 
 import android.content.Context
 

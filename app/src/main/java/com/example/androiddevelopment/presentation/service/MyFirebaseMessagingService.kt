@@ -1,4 +1,4 @@
-package com.example.androiddevelopment.data
+package com.example.androiddevelopment.presentation.service
 import android.annotation.SuppressLint
 import android.app.NotificationChannel
 import android.app.NotificationManager

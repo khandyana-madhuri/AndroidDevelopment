@@ -1,6 +1,6 @@
 package com.example.androiddevelopment.data.repository
 
-import com.example.androiddevelopment.data.ProductEntity
+import com.example.androiddevelopment.data.model.ProductEntity
 import com.example.androiddevelopment.data.remote.ApiService
 import com.example.androiddevelopment.data.room.dao.ProductDao
 import com.example.androiddevelopment.domain.model.ApiResponse

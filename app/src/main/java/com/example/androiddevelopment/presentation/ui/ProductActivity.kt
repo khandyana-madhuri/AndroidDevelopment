@@ -22,9 +22,9 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.androiddevelopment.R
-import com.example.androiddevelopment.data.NotificationPreferences
-import com.example.androiddevelopment.data.ProductAdapter
-import com.example.androiddevelopment.data.ProductEntity
+import com.example.androiddevelopment.domain.utils.NotificationPreferences
+import com.example.androiddevelopment.presentation.adapter.ProductAdapter
+import com.example.androiddevelopment.data.model.ProductEntity
 import com.example.androiddevelopment.databinding.ActivityProductBinding
 import com.example.androiddevelopment.domain.repository.ProductRepository
 import com.example.androiddevelopment.presentation.viewmodel.ProductViewModel

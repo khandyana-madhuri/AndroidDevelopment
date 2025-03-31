@@ -1,6 +1,6 @@
 package com.example.androiddevelopment.domain.repository
 
-import com.example.androiddevelopment.data.ProductEntity
+import com.example.androiddevelopment.data.model.ProductEntity
 import com.example.androiddevelopment.domain.model.ApiResponse
 import kotlinx.coroutines.flow.Flow
 

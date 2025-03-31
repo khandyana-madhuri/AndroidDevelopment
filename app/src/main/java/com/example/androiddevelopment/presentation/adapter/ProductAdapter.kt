@@ -1,4 +1,4 @@
-package com.example.androiddevelopment.data
+package com.example.androiddevelopment.presentation.adapter
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -9,6 +9,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.androiddevelopment.R
+import com.example.androiddevelopment.data.model.ProductEntity
 
 class ProductAdapter(
     private var products: List<ProductEntity>,
