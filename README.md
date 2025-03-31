@@ -92,3 +92,26 @@ This Android application allows users to **view, update, and delete product info
 
 ✅ **MVVM Architecture** 
 – Uses a clean and scalable **Model-View-ViewModel** pattern for efficient data handling.  
+
+## 📸 App Screenshots
+
+### 🔑 Login Screen
+<img src="screenshots/login_screen.png" width="300">
+
+### 🏠 Home Screen
+<img src="screenshots/home_screen.png" width="300">
+
+### 📄 PDF Viewer Screen
+<img src="screenshots/pdf_viewer_screen.png" width="300">
+
+### 🖼️ Image Viewer Screen
+<img src="screenshots/img_viewer_screen.png" width="300">
+
+### 👤 User Data Screen
+<img src="screenshots/user_data_screen.png" width="300">
+
+### ✏️ Update Element Screen
+<img src="screenshots/update_element_screen.png" width="300">
+
+### 🔔 Notification Banner
+<img src="screenshots/notification.png" width="300">
