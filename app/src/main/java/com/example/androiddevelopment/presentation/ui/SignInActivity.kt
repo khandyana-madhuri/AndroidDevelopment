@@ -1,6 +1,8 @@
 package com.example.androiddevelopment.presentation.ui
 
+import android.content.Context
 import android.content.Intent
+import android.net.ConnectivityManager
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -88,12 +90,24 @@ class SignInActivity : AppCompatActivity() {
 
 
     private fun signInWithGoogle() {
+        if (!isNetworkAvailable(this)) {
+            Toast.makeText(this, "No internet connection", Toast.LENGTH_SHORT).show()
+            binding.progressIndicator.visibility = View.GONE
+            return
+        }
+
         binding.progressIndicator.visibility = View.VISIBLE
         val signInIntent = googleSignInClient.signInIntent
         googleSignInLauncher.launch(signInIntent)
     }
 
     private fun firebaseAuthWithGoogle(idToken: String) {
+        if (!isNetworkAvailable(this)) {
+            Toast.makeText(this, "No internet connection", Toast.LENGTH_SHORT).show()
+            binding.progressIndicator.visibility = View.GONE
+            return
+        }
+
         val credential = GoogleAuthProvider.getCredential(idToken, null)
         auth.signInWithCredential(credential)
             .addOnCompleteListener(this) { task ->
@@ -106,11 +120,19 @@ class SignInActivity : AppCompatActivity() {
                         openMainActivity()
                         finish()
                     }
-                    binding.progressIndicator.visibility = View.GONE
                 } else {
-                    binding.progressIndicator.visibility = View.GONE
                     Log.e("Google Sign-In", "Sign-in failed", task.exception)
+                    Toast.makeText(this, "Sign-in failed: ${task.exception?.message}", Toast.LENGTH_SHORT).show()
                 }
+                binding.progressIndicator.visibility = View.GONE
             }
+    }
+
+    companion object {
+        fun isNetworkAvailable(context: Context): Boolean {
+            val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+            val networkInfo = connectivityManager.activeNetworkInfo
+            return networkInfo != null && networkInfo.isConnected
+        }
     }
 }

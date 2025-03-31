@@ -27,6 +27,7 @@ import com.example.androiddevelopment.presentation.adapter.ProductAdapter
 import com.example.androiddevelopment.data.model.ProductEntity
 import com.example.androiddevelopment.databinding.ActivityProductBinding
 import com.example.androiddevelopment.domain.repository.ProductRepository
+import com.example.androiddevelopment.presentation.ui.SignInActivity.Companion.isNetworkAvailable
 import com.example.androiddevelopment.presentation.viewmodel.ProductViewModel
 import kotlinx.coroutines.launch
 import org.koin.android.ext.android.inject
@@ -117,17 +118,21 @@ class ProductActivity : AppCompatActivity() {
     }
 
     private fun fetchProductsAndStore() {
-        lifecycleScope.launch {
-            try {
-                if (productViewModel.products.value.isEmpty()) {
-                    val apiResponse = repository.getProducts()
-                    val products = apiResponse.map { ProductEntity.fromApiResponse(it) }
-                    products.forEach {
-                        productViewModel.insertProduct(it)
+        if (!isNetworkAvailable(this)) {
+            Toast.makeText(this, "No internet connection", Toast.LENGTH_SHORT).show()
+        } else {
+            lifecycleScope.launch {
+                try {
+                    if (productViewModel.products.value.isEmpty()) {
+                        val apiResponse = repository.getProducts()
+                        val products = apiResponse.map { ProductEntity.fromApiResponse(it) }
+                        products.forEach {
+                            productViewModel.insertProduct(it)
+                        }
                     }
+                } catch (e: Exception) {
+                    e.printStackTrace()
                 }
-            } catch (e: Exception) {
-                e.printStackTrace()
             }
         }
     }
