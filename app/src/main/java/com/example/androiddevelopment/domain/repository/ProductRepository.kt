@@ -9,15 +9,11 @@ interface ProductRepository {
 
     suspend fun insert(product: ProductEntity)
 
-    suspend fun insertAll(products: List<ProductEntity>)
-
     suspend fun update(product: ProductEntity)
 
     suspend fun delete(product: ProductEntity)
 
     suspend fun deleteAll()
-
-    suspend fun getProductById(id: String): ProductEntity?
 
     suspend fun getProducts() : List<ApiResponse>
 }

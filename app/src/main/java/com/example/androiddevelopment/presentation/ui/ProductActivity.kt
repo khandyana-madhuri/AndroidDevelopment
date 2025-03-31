@@ -38,6 +38,7 @@ class ProductActivity : AppCompatActivity() {
     private val repository: ProductRepository by inject()
     private var shouldFetchFromApi = true
     private lateinit var notificationPrefs: NotificationPreferences
+
     private val notificationPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
     ) { isGranted ->
@@ -51,17 +52,13 @@ class ProductActivity : AppCompatActivity() {
         binding = ActivityProductBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
+        ViewCompat.setOnApplyWindowInsetsListener(binding.main) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
 
-        if (savedInstanceState == null) {
-            shouldFetchFromApi = true
-        } else {
-            shouldFetchFromApi = savedInstanceState.getBoolean("SHOULD_FETCH", false)
-        }
+        shouldFetchFromApi = savedInstanceState?.getBoolean("SHOULD_FETCH", false) ?: true
 
         if (shouldFetchFromApi) {
             fetchProductsAndStore()
@@ -139,7 +136,7 @@ class ProductActivity : AppCompatActivity() {
     private fun showLocalNotification(productName: String) {
 
         if (!notificationPrefs.areNotificationsEnabled()) {
-            return // Exit if notifications are disabled
+            return
         }
 
         val channelId = "delete_notification_channel"
@@ -195,7 +192,7 @@ class ProductActivity : AppCompatActivity() {
 
                 val label = TextView(context).apply {
                     text = displayName
-                    setTextAppearance(context, android.R.style.TextAppearance_Medium)
+                    setTextAppearance(android.R.style.TextAppearance_Medium)
                 }
                 layout.addView(label)
 

@@ -1,5 +1,6 @@
 package com.example.androiddevelopment.presentation.adapter
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
@@ -25,8 +26,8 @@ class ProductAdapter(
     inner class ProductViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val tvName: TextView = itemView.findViewById(R.id.tvName)
         val layoutDynamicFields: LinearLayout = itemView.findViewById(R.id.layoutDynamicFields)
-        val btnEdit: ImageButton = itemView.findViewById(R.id.btnEdit)
-        val btnDelete: ImageButton = itemView.findViewById(R.id.btnDelete)
+        private val btnEdit: ImageButton = itemView.findViewById(R.id.btnEdit)
+        private val btnDelete: ImageButton = itemView.findViewById(R.id.btnDelete)
 
         init {
 
@@ -56,6 +57,7 @@ class ProductAdapter(
             holder.layoutDynamicFields.removeViews(1, holder.layoutDynamicFields.childCount - 2)
         }
 
+        @SuppressLint("SetTextI18n")
         fun addFieldIfPresent(label: String, value: Any?) {
             value?.let {
                 TextView(context).apply {

@@ -9,7 +9,7 @@ import com.example.androiddevelopment.data.room.entities.UserEntity
 
 @Database(
     entities = [ProductEntity::class, UserEntity::class],
-    version = 2,
+    version = 1,
     exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {

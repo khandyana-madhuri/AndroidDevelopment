@@ -14,10 +14,6 @@ class ProductRepositoryImpl(private val productDao: ProductDao, private val apiS
         productDao.insertProduct(product)
     }
 
-    override suspend fun insertAll(products: List<ProductEntity>) {
-        productDao.insertAll(products)
-    }
-
     override suspend fun update(product: ProductEntity) {
         productDao.updateProduct(product)
     }
@@ -28,10 +24,6 @@ class ProductRepositoryImpl(private val productDao: ProductDao, private val apiS
 
     override suspend fun deleteAll() {
         productDao.deleteAllProducts()
-    }
-
-    override suspend fun getProductById(id: String): ProductEntity? {
-        return productDao.getProductById(id)
     }
 
     override suspend fun getProducts(): List<ApiResponse> {

@@ -105,14 +105,6 @@ class SignInActivity : AppCompatActivity() {
                         signInViewModel.handleGoogleSignInResult(user)
                         openMainActivity()
                         finish()
-                        /*signInViewModel.getUser()
-                        signInViewModel.user.observe(this) { users ->
-                            if (users != null) {
-                                println("SignInActivity Users data $users")
-                            } else {
-                                println("SignInActivity Users data empty")
-                            }
-                        }*/
                     }
                     binding.progressIndicator.visibility = View.GONE
                 } else {
