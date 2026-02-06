@@ -7,6 +7,8 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.androiddevelopment.ui.viewmodel.NewsViewModel
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -18,12 +20,8 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
 
         setContent {
-            MaterialTheme {
-                Surface {
-                    //NewsApp()
-                    Text("Hello")
-                }
-            }
+           val vm: NewsViewModel = hiltViewModel()
+            Text("Fetching News.. Check Logcat")
         }
     }
 }

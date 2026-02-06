@@ -1,5 +1,6 @@
 package com.example.androiddevelopment.di
 
+import com.example.androiddevelopment.data.remote.api.NewsApi
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -25,8 +26,12 @@ object NetworkModule {
     @Singleton
     fun providesRetrofit(okHttpClient: OkHttpClient): Retrofit =
         Retrofit.Builder()
-            .baseUrl("https://newsapi.org/")
+            .baseUrl("https://newsapi.org/v2/")
             .client(okHttpClient)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
+
+    @Provides
+    @Singleton
+    fun provideNewsApi(retrofit: Retrofit) = retrofit.create(NewsApi::class.java)
 }
