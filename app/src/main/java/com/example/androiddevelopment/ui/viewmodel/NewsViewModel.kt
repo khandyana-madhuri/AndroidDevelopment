@@ -23,18 +23,27 @@ class NewsViewModel @Inject constructor(val newsRepositoryImpl: NewsRepositoryIm
     private val _uiState = MutableStateFlow<NewsUiState>(NewsUiState.Loading)
     val uiState: StateFlow<NewsUiState> = _uiState
 
+    private val _isRefreshing = MutableStateFlow(false)
+    val isRefreshing: StateFlow<Boolean> = _isRefreshing
+
+
     init {
         fetchNews()
     }
 
-    fun fetchNews() {
+    fun fetchNews(isPullRefresh: Boolean = false) {
         viewModelScope.launch {
-            _uiState.value = NewsUiState.Loading
+            if(isPullRefresh)
+                _isRefreshing.value = true
+            else
+                _uiState.value = NewsUiState.Loading
             try {
                 val articles = newsRepositoryImpl.fetchNews()
                 _uiState.value = NewsUiState.Success(articles)
             } catch(e: Exception) {
                 _uiState.value = NewsUiState.Error(e.localizedMessage ?: "Something Went Wrong")
+            } finally {
+                _isRefreshing.value = false
             }
         }
     }
